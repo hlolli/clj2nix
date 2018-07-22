@@ -1,5 +1,6 @@
 (ns clj2nix
   (:require [clojure.tools.deps.alpha :refer [resolve-deps]]
+            [clojure.tools.deps.alpha.util.maven :as mvn]
             [clojure.string :as string]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
@@ -12,6 +13,10 @@
   let repos = [
         \"https://repo.clojars.org/\"
         \"https://repo1.maven.org/\"
+        \"http://central.maven.org/maven2/\"
+        \"http://oss.sonatype.org/content/repositories/releases/\"
+        \"http://oss.sonatype.org/content/repositories/public/\"
+        \"http://repo.typesafe.com/typesafe/releases/\"
       ];
   in {
       packages = [")
@@ -72,8 +77,10 @@
    output-path
    (generate-nix-expr
     (resolve-deps
-     (edn/read-string
-      (slurp deps-edn-path))
+     (merge
+      (edn/read-string
+       (slurp deps-edn-path))
+      {:mvn/repos mvn/standard-repos})
      nil)))
   (System/exit 0))
 
