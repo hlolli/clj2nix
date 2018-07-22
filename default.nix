@@ -16,7 +16,7 @@ in stdenv.mkDerivation rec {
   
   installPhase = ''
 
-      mkdir -p $out/bin $out/.m2
+      mkdir -p $out/bin
       
       cp ${src} $out/bin
       makeWrapper ${clojure}/bin/clojure $out/bin/clj2nix \
