@@ -1,12 +1,11 @@
 { stdenv, clojure, makeWrapper, fetchMavenArtifact }:
 
-let deps   = import ./deps.nix { inherit fetchMavenArtifact; };
-    paths  = builtins.map (dep: dep.path.jar) deps.packages;
-    classp = builtins.concatStringsSep ":" paths;
+let cljdeps = import ./deps.nix;
+    classp  = cljdeps.makeClasspaths {};
 
 in stdenv.mkDerivation rec {
 
-  name = "clj2nix-1.0.0";
+  name = "clj2nix-1.0.1";
 
   src = ./clj2nix.clj;
 

@@ -1,11 +1,11 @@
 { stdenv, clojure, jre, fetchMavenArtifact, fetchgit }:
 
-let deps = import ./deps.test.nix {
+let cljdeps = import ./deps.test.nix {
       inherit fetchMavenArtifact;
       inherit fetchgit;
     };
-    paths = builtins.map (dep: dep.path) deps.packages;
-    classp = builtins.concatStringsSep ":" paths;
+
+    classp = cljdeps.makePaths {};
 
 
 in stdenv.mkDerivation rec {
@@ -16,7 +16,7 @@ in stdenv.mkDerivation rec {
   buildInputs = [ clojure jre ];
 
   buildPhase = ''
-    echo ${classp}
+    echo 'classpd! ' ${builtins.toString classp}
     mkdir $out
   '';
 }

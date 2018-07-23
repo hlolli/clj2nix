@@ -8,7 +8,10 @@
         "http://oss.sonatype.org/content/repositories/public/"
         "http://repo.typesafe.com/typesafe/releases/"
       ];
-  in {
+  in rec {
+      makePaths = {extraClasspaths ? []}: (builtins.map (dep: if builtins.hasAttr "jar" dep.path then dep.path.jar else dep.path) packages) ++ extraClasspaths;
+      makeClasspaths = {extraClasspaths ? []}: builtins.concatStringsSep ":" (makePaths {inherit extraClasspaths;});
+
       packages = [
   {
     name = "clj-time";
