@@ -1,36 +1,25 @@
-{ stdenv, pkgs, fetchMavenArtifact, callPackage }:
+{ stdenv, clojure, jre, fetchMavenArtifact, fetchgit }:
 
-let
-  # fetchclojar = callPackage ./fetchClojar.nix {};
-  cljPackages = import ./debug.nix {
-    inherit fetchMavenArtifact;
-  };
+let deps = import ./deps.test.nix {
+      inherit fetchMavenArtifact;
+      inherit fetchgit;
+    };
+    paths = builtins.map (dep: dep.path) deps.packages;
+    classp = builtins.concatStringsSep ":" paths;
 
-#   nodeSources = map (x: x.path) nodePackages.packages;
 
 in stdenv.mkDerivation rec {
-  version = "1.9.0-alpha";
-  name = "lumo-${version}";
+  name = "clj2nixTest";
+  
+  phases = [ "buildPhase" ];
 
-  srcs = map (x: x.path) cljPackages.packages;
-
-  # 
-
-
-  phases = [ "unpackPhase" "installPhase" "buildPhase" ];
-
-  # unpackPhase = ''
-  #   unpackPhase;
-  # '';
+  buildInputs = [ clojure jre ];
 
   buildPhase = ''
-    echo `pwd`
-  '';
-
-
-  installPhase = ''
-  echo `pwd`
+    echo ${classp}
+    mkdir $out
   '';
 }
 
-# nix-build -E 'with import <nixpkgs> {}; callPackage ./test.nix {}' --dry-run
+# clojure -i clj2nix.clj -m clj2nix test/deps.test.edn test/deps.test.nix
+# nix-build -E 'with import <nixpkgs> {}; callPackage ./test.nix {}'
