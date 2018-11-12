@@ -47,7 +47,7 @@ With an imported `deps.nix` you can use it to fetch the dependencies trough nix.
 ```
 { stdenv, pkgs, clojure }:
 
-let cljdeps = import ./deps.nix pkgs;
+let cljdeps = import ./deps.nix { inherit pkgs; };
     classp  = cljsdeps.makeClasspaths {};
 
 in stdenv.mkDerivation {
@@ -64,7 +64,7 @@ in stdenv.mkDerivation {
 
 ```
 # example
-let cljdeps = import ./deps.nix pkgs;
+let cljdeps = import ./deps.nix { inherit pkgs; };
     classp  = cljsdeps.makeClasspaths {};
 
 ....
@@ -78,7 +78,7 @@ with the optional parameter extraClasspaths
 
 ```
 # example
-let cljdeps = import ./deps.nix pkgs;
+let cljdeps = import ./deps.nix { inherit pkgs; };
     classp  = cljsdeps.makeClasspaths {extraClasspaths="./local/file.jar"};
 
 ....
@@ -92,7 +92,7 @@ prints:
 
 ```
 # example
-let cljdeps = import ./deps.nix pkgs;
+let cljdeps = import ./deps.nix { inherit pkgs; };
     classp  = cljsdeps.makePaths {};
 
 ....
