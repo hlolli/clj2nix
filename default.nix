@@ -1,11 +1,11 @@
-{ stdenv, clojure, makeWrapper, fetchMavenArtifact }:
+{ stdenv, pkgs, clojure, makeWrapper, fetchMavenArtifact }:
 
-let cljdeps = import ./deps.nix;
+let cljdeps = import ./deps.nix pkgs;
     classp  = cljdeps.makeClasspaths {};
 
 in stdenv.mkDerivation rec {
 
-  name = "clj2nix-1.0.1";
+  name = "clj2nix-1.0.2";
 
   src = ./clj2nix.clj;
 

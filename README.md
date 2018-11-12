@@ -10,7 +10,7 @@ self: super:
 }
 ```
 
-In your nix config, import the overlays file
+In your nix config, import the overlays file and pass in pkgs as argument
 ```
 nixpkgs.overlays = [/path/to/overlays.nix];
 ```
@@ -45,9 +45,9 @@ $ clj2nix ./deps.edn ./deps.nix
 With an imported `deps.nix` you can use it to fetch the dependencies trough nix. The set has two helper functions that can do this for you; `makeClasspaths {}` and `makePaths {}`.
 
 ```
-{ stdenv, clojure }:
+{ stdenv, pkgs, clojure }:
 
-let cljdeps = import ./deps.nix;
+let cljdeps = import ./deps.nix pkgs;
     classp  = cljsdeps.makeClasspaths {};
 
 in stdenv.mkDerivation {
@@ -64,7 +64,7 @@ in stdenv.mkDerivation {
 
 ```
 # example
-let cljdeps = import ./deps.nix;
+let cljdeps = import ./deps.nix pkgs;
     classp  = cljsdeps.makeClasspaths {};
 
 ....
@@ -78,7 +78,7 @@ with the optional parameter extraClasspaths
 
 ```
 # example
-let cljdeps = import ./deps.nix;
+let cljdeps = import ./deps.nix pkgs;
     classp  = cljsdeps.makeClasspaths {extraClasspaths="./local/file.jar"};
 
 ....
@@ -92,7 +92,7 @@ prints:
 
 ```
 # example
-let cljdeps = import ./deps.nix;
+let cljdeps = import ./deps.nix pkgs;
     classp  = cljsdeps.makePaths {};
 
 ....
