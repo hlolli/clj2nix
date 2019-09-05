@@ -2,7 +2,7 @@
 
 let cljdeps = import ./deps.nix { inherit pkgs; };
     classp  = cljdeps.makeClasspaths {};
-    version = "1.0.3";
+    version = "1.0.4";
 
 in stdenv.mkDerivation rec {
 
@@ -13,11 +13,11 @@ in stdenv.mkDerivation rec {
   buildInputs = [ makeWrapper ];
 
   phases = ["installPhase"];
-  
+
   installPhase = ''
 
       mkdir -p $out/bin
-      
+
       cp ${src} $out/bin
       makeWrapper ${clojure}/bin/clojure $out/bin/clj2nix \
         --add-flags "-Scp ${classp} -i ${src} -m clj2nix ${version}" \
