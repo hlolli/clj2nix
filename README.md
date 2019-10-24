@@ -2,34 +2,14 @@
 
 ## installation
 
-Clone the repo and create an overlay file (ex. overlays.nix)
-```
-self: super:
-{
-  clj2nix = self.callPackage /path/to/git/repo {};
-}
-```
-
-In your nix config, import the overlays file and pass in pkgs as argument
-```
-nixpkgs.overlays = [/path/to/overlays.nix];
-```
-
-Then add `clj2nix` to `environment.systemPackages`
-
-```
-environment.systemPackages =
-    with pkgs;
-    [
-      ...all your packages....
-      clj2nix
-    ];
-```
-
-Finally
-
-```
-# nixos-rebuild switch
+```nix
+let
+  clj2nix = pkgs.callPackage (pkgs.fetchFromGitHub {
+    owner = "hlolli";
+    repo = "clj2nix";
+    rev = "de55ca72391bdadcdcbdf40337425d94e55162cb";
+    sha256 = "0bsq0b0plh6957zy9gl2g6hq8nhjkln4sn9lgf3yqbwz8i1z5a4a";
+  }) {};
 ```
 
 ## useage
@@ -52,7 +32,7 @@ let cljdeps = import ./deps.nix { inherit pkgs; };
 
 in stdenv.mkDerivation {
   ...whatever here...
-  
+
   installPhase = ''
       clojure -i somefile.clj -Scp ${classp}
   '';
