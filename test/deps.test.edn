@@ -1,4 +1,5 @@
 {:deps
  {clj-time             {:mvn/version "0.14.2"}
   org.clojure/data.csv {:git/url "https://github.com/clojure/data.csv.git"
-                        :sha     "e5beccad0bafdb8e78f19cba481d4ecef5fabf36"}}}
+                        :sha     "e5beccad0bafdb8e78f19cba481d4ecef5fabf36"}}
+ :aliases {:testing {:extra-deps {lambdaisland/kaocha {:mvn/version "0.0-554"}}}}}

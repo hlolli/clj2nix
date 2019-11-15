@@ -142,8 +142,8 @@
       inherit repos;
       artifactId = "tools.cli";
       groupId = "org.clojure";
-      sha512 = "926325e682e63095ae543d064fdd40ce85513780e65ec7c7b257e348693ef3498c845d6b7d8d61e251eec7667589ddba1f8c5097f429ce0a1e3dcd26b5706d31";
-      version = "0.3.5";
+      sha512 = "9baf3fafe2e92b846404ef1bd897a4a335fe4bc1f78a2408ee93c09dc960a630f58a0e863b2d299624783f2851bb5d83f93fa627276d28d66c92764c46f27efe";
+      version = "0.4.2";
     };
   }
 
@@ -483,8 +483,8 @@
       inherit repos;
       artifactId = "tools.deps.alpha";
       groupId = "org.clojure";
-      sha512 = "9615258527ed2d4cfcadffb9e9bd237bed41fa8f2088c5fe722192379891271a6f8fd1500ed8b945ceed59e26119834a7afcf34e83fa057447979982254d9df1";
-      version = "0.7.541";
+      sha512 = "37804012e8c5ae6fb364885bbb3f60d559c0f1a7b4c22c9de5fc8a41de1d2456f5ab5afb821cbec7d830d531a2b79cbb958bc1e2cf684b255d5baa07d4fe686f";
+      version = "0.8.584";
     };
   }
 
