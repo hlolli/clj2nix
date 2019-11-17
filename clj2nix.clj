@@ -152,8 +152,8 @@
         deps-edn-data (update
                        (edn/read-string
                         (slurp deps-edn-path))
-                       merge
                        :mvn/repos
+                       merge
                        mvn/standard-repos)
         aliases (->> (:alias options)
                      (map (fn [alias] (get-in deps-edn-data [:aliases alias])))
