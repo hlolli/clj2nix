@@ -2,13 +2,15 @@
 
 ## installation
 
+(Change rev and sha256 according to `nix-prefetch-github hlolli clj2nix`)
+
 ```nix
 let
   clj2nix = pkgs.callPackage (pkgs.fetchFromGitHub {
     owner = "hlolli";
     repo = "clj2nix";
-    rev = "de55ca72391bdadcdcbdf40337425d94e55162cb";
-    sha256 = "0bsq0b0plh6957zy9gl2g6hq8nhjkln4sn9lgf3yqbwz8i1z5a4a";
+    rev = "b9a28d4a920d5d680439b1b0d18a1b2c56d52b04";
+    sha256 = "0d8xlja62igwg757lab9ablz1nji8cp9p9x3j0ihqvp1y48w2as3";
   }) {};
 ```
 
