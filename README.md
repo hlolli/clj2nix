@@ -12,7 +12,7 @@ let
   }) {};
 ```
 
-## useage
+## usage
 
 After the installation you should have `clj2nix` on your path, which takes two arguments, the depn.edn file for the project's dependencies, and the output file.
 

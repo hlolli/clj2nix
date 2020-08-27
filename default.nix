@@ -1,8 +1,12 @@
-{ stdenv, pkgs, clojure, makeWrapper, fetchMavenArtifact }:
+{
+  stdenv, lib, pkgs, coreutils, clojure,
+  makeWrapper, fetchMavenArtifact,
+  nix-prefetch-git
+}:
 
 let cljdeps = import ./deps.nix { inherit pkgs; };
     classp  = cljdeps.makeClasspaths {};
-    version = "1.0.4";
+    version = "1.0.5";
 
 in stdenv.mkDerivation rec {
 
@@ -21,5 +25,6 @@ in stdenv.mkDerivation rec {
       cp ${src} $out/bin
       makeWrapper ${clojure}/bin/clojure $out/bin/clj2nix \
         --add-flags "-Scp ${classp} -i ${src} -m clj2nix ${version}" \
+        --prefix PATH : "$PATH:${lib.makeBinPath [ coreutils nix-prefetch-git ]}"
   '';
 }

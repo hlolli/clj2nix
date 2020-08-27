@@ -1,23 +1,25 @@
-{ stdenv, clojure, jre, fetchMavenArtifact, fetchgit }:
+{ stdenv, clojure }:
 
-let cljdeps = import ./deps.test.nix {
-      inherit fetchMavenArtifact;
-      inherit fetchgit;
-    };
-
+let cljdeps = import ./deps.test.nix {};
     classp = cljdeps.makePaths {};
 
 
 in stdenv.mkDerivation rec {
   name = "clj2nixTest";
-  
+
   phases = [ "buildPhase" ];
 
-  buildInputs = [ clojure jre ];
+  buildInputs = [];
 
   buildPhase = ''
-    echo 'classpd! ' ${builtins.toString classp}
     mkdir $out
+  '';
+
+  # basic sanity checks
+  installCheckPhase = ''
+    echo ${builtins.toString classp} | fgrep 'clj-time'
+    echo ${builtins.toString classp} | fgrep 'org.clojure/data.csv'
+    echo ${builtins.toString classp} | fgrep 'joda-time/joda-time'
   '';
 }
 

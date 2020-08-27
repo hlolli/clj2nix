@@ -1,6 +1,6 @@
 (ns clj2nix
   (:gen-class)
-  (:require [clojure.tools.deps.alpha :refer [resolve-deps]]
+  (:require [clojure.tools.deps.alpha :as deps]
             [clojure.tools.deps.alpha.util.maven :as mvn]
             [clojure.tools.cli :refer [parse-opts]]
             [clojure.string :as string]
@@ -23,7 +23,7 @@
   (str "{ pkgs ? import <nixpkgs> {} }:
 
   let repos = ["
-        (repos-nix deps-edn-data) "
+       (repos-nix deps-edn-data) "
         \"http://oss.sonatype.org/content/repositories/releases/\"
         \"http://oss.sonatype.org/content/repositories/public/\"
         \"http://repo.typesafe.com/typesafe/releases/\"
@@ -67,7 +67,6 @@
     };
   }
 " (str name) artifactID url rev sha256))
-
 
 (defn resolve-artifact-and-group [name]
   (let [split (string/split (str name) #"/")]
@@ -180,7 +179,7 @@
              output-path
              (generate-nix-expr
               clj2nix-version
-              (resolve-deps deps-edn-data nil)
+              (deps/resolve-deps deps-edn-data nil)
               deps-edn-data))))
   (System/exit 0))
 
@@ -188,7 +187,7 @@
 (comment
   (do (spit "debug.nix"
             (generate-nix-expr
-             (resolve-deps
+             (deps/resolve-deps
               '{:deps
                 {org.clojure/clojure        {:mvn/version "1.9.0"}
                  org.clojure/clojurescript  {:mvn/version "1.10.238"}
