@@ -30,7 +30,17 @@
       ];
 
   in rec {
-      makePaths = {extraClasspaths ? []}: (builtins.map (dep: if builtins.hasAttr \"jar\" dep.path then dep.path.jar else dep.path) packages) ++ extraClasspaths;
+      makePaths = {extraClasspaths ? []}:
+        (builtins.map
+          (dep:
+            if builtins.isString dep.path then
+              dep.path
+            else if builtins.hasAttr \"jar\" dep.path then
+              dep.path.jar
+            else
+              dep.path)
+          packages)
+        ++ extraClasspaths;
       makeClasspaths = {extraClasspaths ? []}: builtins.concatStringsSep \":\" (makePaths {inherit extraClasspaths;});
 
       packages = ["))
@@ -59,12 +69,12 @@
   (format "
   {
     name = \"%s\";
-    path = pkgs.fetchgit {
+    path = ''${pkgs.fetchgit {
       name = \"%s\";
       url = \"%s\";
       rev = \"%s\";
       sha256 = \"%s\";
-    };
+    }}/src'';
   }
 " (str name) artifactID url rev sha256))
 
