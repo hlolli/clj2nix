@@ -1,4 +1,8 @@
-{:deps
+{:mvn/repos
+   {"bintray" {:url "http://jcenter.bintray.com"}
+    "central" {:url "https://repo1.maven.org/maven2/"}
+    "clojars" {:url "https://repo.clojars.org/"}}
+ :deps
  {clj-time             {:mvn/version "0.14.2"}
   org.clojure/data.csv {:git/url "https://github.com/clojure/data.csv.git"
                         :sha     "e5beccad0bafdb8e78f19cba481d4ecef5fabf36"}}

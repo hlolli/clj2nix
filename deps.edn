@@ -4,4 +4,6 @@
   org.clojure/tools.cli        {:mvn/version "1.0.194"}
   org.clojure/tools.deps.alpha {:mvn/version "0.9.763"
                                 :exclusions  [com.google.inject/guice]}
-  com.google.inject/guice      {:mvn/version "4.2.3"}}}
+  com.google.inject/guice      {:mvn/version "4.2.3"}
+  org.slf4j/slf4j-simple       {:mvn/version "1.7.30"}
+  }}
