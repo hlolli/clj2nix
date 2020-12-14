@@ -46,8 +46,13 @@ let repos = [" (repos-nix mvn-repos) " ];
   }
   ")
 
-(defn- maven-item [name artifactID groupID sha512 version]
-  (format "
+(defn- maven-item [artifactID groupID sha512 version classifier]
+  (let [name (str artifactID "/" groupID)
+        classifier-str
+        (if-not classifier
+          ""
+          (format "classifier = \"%s\";" classifier))]
+   (format "
   {
     name = \"%s\";
     path = pkgs.fetchMavenArtifact {
@@ -56,9 +61,10 @@ let repos = [" (repos-nix mvn-repos) " ];
       groupId = \"%s\";
       sha512 = \"%s\";
       version = \"%s\";
+      %s
     };
   }
-" (str name) artifactID groupID sha512 (str version)))
+" name artifactID groupID sha512 (str version) classifier-str)))
 
 (defn- git-item [name artifactID url rev sha256]
   (format "
@@ -74,10 +80,14 @@ let repos = [" (repos-nix mvn-repos) " ];
 " (str name) artifactID url rev sha256))
 
 (defn- resolve-artifact-and-group [name]
-  (let [split (string/split (str name) #"/")]
+  (let [split (string/split (str name) #"/")
+        [name classifier]
+        (if (= 1 (count split))
+          (string/split (str name) #"\$")
+          (string/split (second split) #"\$"))]
     (if (= 1 (count split))
-      [name name]
-      [(first split) (second split)])))
+      [name name classifier]
+      [(first split) name classifier])))
 
 (defn- resolve-git-sha256 [git-url rev]
   (let [unpack? (or (re-find #"\.tar.gz$" git-url)
@@ -96,7 +106,7 @@ let repos = [" (repos-nix mvn-repos) " ];
 (defn- generate-items [deps]
   (->> (seq deps)
        (reduce (fn [acc [name dep]]
-                 (let [[groupID artifactID] (resolve-artifact-and-group name)]
+                 (let [[groupID artifactID classifier] (resolve-artifact-and-group name)]
                    (let [git-dep?   (contains? dep :git/url)
                          local-dep? (contains? dep :local/root)]
                      (assert (contains? dep :paths)
@@ -122,11 +132,11 @@ let repos = [" (repos-nix mvn-repos) " ];
                                              (resolve-git-sha256 (:git/url dep) (:sha dep))))
                        :else      (conj
                                    acc
-                                   (maven-item name
-                                               artifactID
+                                   (maven-item artifactID
                                                groupID
                                                (resolve-sha512 (first (:paths dep)))
-                                               (:mvn/version dep))))))) [])
+                                               (:mvn/version dep)
+                                               classifier)))))) [])
        (apply str)))
 
 (defn generate-nix-expr
