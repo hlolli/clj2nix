@@ -1,7 +1,6 @@
 {
   stdenv, lib, pkgs, coreutils, clojure,
-  makeWrapper, fetchMavenArtifact,
-  nix-prefetch-git
+  makeWrapper, nix-prefetch-git
 }:
 
 let cljdeps = import ./deps.nix { inherit pkgs; };

@@ -26,7 +26,11 @@
 let repos = [" (repos-nix mvn-repos) " ];
 
   in rec {
-      makePaths = {extraClasspaths ? []}:
+      fetchmaven = pkgs.callPackage (pkgs.fetchurl {
+        url = \"https://raw.githubusercontent.com/NixOS/nixpkgs/ba5e2222458a52357a3ba5873d88779d5c223269/pkgs/build-support/fetchmavenartifact/default.nix\";
+        sha512 = \"05m7i8hbhyfz7p2f106mfbsasjf04svd9xkgc26pl3shljrk0dfacz39wiwzm6xqw7czgrsx745vciram7al621v7634nfdq3m1x88a\";
+      }) {};
+      makePaths = {extraClasspaths ? null}:
         (pkgs.lib.concatMap
           (dep:
             builtins.map
@@ -35,13 +39,15 @@ let repos = [" (repos-nix mvn-repos) " ];
                 path
               else if builtins.hasAttr \"jar\" path then
                 path.jar
+              else if builtins.hasAttr \"outPath\" path then
+                path.outPath
               else
-                path)
+                path
+                )
             dep.paths)
           packages)
-        ++ extraClasspaths;
-      makeClasspaths = {extraClasspaths ? []}: builtins.concatStringsSep \":\" (makePaths {inherit extraClasspaths;});
-
+        ++ (if extraClasspaths != null then [ extraClasspaths ] else []);
+      makeClasspaths = {extraClasspaths ? null}: builtins.concatStringsSep \":\" (makePaths {inherit extraClasspaths;});
       packages = ["))
 
 (def ^:priave suffix
@@ -59,14 +65,14 @@ let repos = [" (repos-nix mvn-repos) " ];
    (format "
   {
     name = \"%s\";
-    paths = [pkgs.fetchMavenArtifact {
+    paths = [(fetchmaven {
       inherit repos;
       artifactId = \"%s\";
       groupId = \"%s\";
       sha512 = \"%s\";
       version = \"%s\";
-      %s;
-    }];
+      %s
+    })];
   }
 " name artifactID groupID sha512 (str version) classifier-str)))
 
@@ -75,7 +81,7 @@ let repos = [" (repos-nix mvn-repos) " ];
 
 (defn- git-item [name artifactID url rev sha256 source-paths]
   (format "
-  {
+  ({
     name = \"%s\";
     paths =
       let gitSrc = pkgs.fetchgit {
@@ -87,7 +93,7 @@ let repos = [" (repos-nix mvn-repos) " ];
       in map (path: gitSrc + path) [
         %s
       ];
-  }
+  })
 " (str name) artifactID url rev sha256
           (->> source-paths
                (map #(format "\"%s\"" %))
