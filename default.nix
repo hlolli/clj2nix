@@ -23,7 +23,10 @@ in stdenv.mkDerivation rec {
 
       cp ${src} $out/bin
       makeWrapper ${clojure}/bin/clojure $out/bin/clj2nix \
-        --add-flags "-Scp ${classp} -i ${src} -m clj2nix ${version}" \
+        --add-flags "-Scp ${classp} ${
+          if (lib.versionAtLeast clojure.version "1.10.1.697")
+            then "-M ${src}" else "-i ${src} -m clj2nix"
+        } ${version}" \
         --prefix PATH : "$PATH:${lib.makeBinPath [ coreutils nix-prefetch-git ]}"
   '';
 }
