@@ -48,6 +48,7 @@ let repos = [" (repos-nix mvn-repos) " ];
           packages)
         ++ (if extraClasspaths != null then [ extraClasspaths ] else []);
       makeClasspaths = {extraClasspaths ? null}: builtins.concatStringsSep \":\" (makePaths {inherit extraClasspaths;});
+      packageSources = builtins.map (dep: dep.src) packages;
       packages = ["))
 
 (def ^:priave suffix
@@ -63,16 +64,17 @@ let repos = [" (repos-nix mvn-repos) " ];
           ""
           (format "classifier = \"%s\";" classifier))]
    (format "
-  {
+  rec {
     name = \"%s\";
-    paths = [(fetchmaven {
+    src = fetchmaven {
       inherit repos;
       artifactId = \"%s\";
       groupId = \"%s\";
       sha512 = \"%s\";
       version = \"%s\";
       %s
-    })];
+    };
+    paths = [ src ];
   }
 " name artifactID groupID sha512 (str version) classifier-str)))
 
@@ -81,18 +83,17 @@ let repos = [" (repos-nix mvn-repos) " ];
 
 (defn- git-item [name artifactID url rev sha256 source-paths]
   (format "
-  ({
+  (rec {
     name = \"%s\";
-    paths =
-      let gitSrc = pkgs.fetchgit {
-            name = \"%s\";
-            url = \"%s\";
-            rev = \"%s\";
-            sha256 = \"%s\";
-          };
-      in map (path: gitSrc + path) [
-        %s
-      ];
+    src = pkgs.fetchgit {
+      name = \"%s\";
+      url = \"%s\";
+      rev = \"%s\";
+      sha256 = \"%s\";
+    };
+    paths = map (path: src + path) [
+      %s
+    ];
   })
 " (str name) artifactID url rev sha256
           (->> source-paths
