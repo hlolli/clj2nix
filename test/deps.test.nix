@@ -29,79 +29,84 @@ let repos = [
           packages)
         ++ (if extraClasspaths != null then [ extraClasspaths ] else []);
       makeClasspaths = {extraClasspaths ? null}: builtins.concatStringsSep ":" (makePaths {inherit extraClasspaths;});
+      packageSources = builtins.map (dep: dep.src) packages;
       packages = [
-  {
+  rec {
     name = "clj-time/clj-time";
-    paths = [(fetchmaven {
+    src = fetchmaven {
       inherit repos;
       artifactId = "clj-time";
       groupId = "clj-time";
       sha512 = "b8012a4b1d9de72d3d1fe5b96dd5c36900f2a9aa040c76727f8ab7b744c1b0c758af17ac46075ac82d8e549a22c018e7d20b5aec4c774764508d28ab66f4a1f7";
       version = "0.14.2";
       
-    })];
+    };
+    paths = [ src ];
   }
 
-  ({
+  (rec {
     name = "org.clojure/data.csv";
-    paths =
-      let gitSrc = pkgs.fetchgit {
-            name = "data.csv";
-            url = "https://github.com/clojure/data.csv.git";
-            rev = "e5beccad0bafdb8e78f19cba481d4ecef5fabf36";
-            sha256 = "021yhc19biycrdcyfak2hyy6jncrw3fhkqzd1jr77rid3f54nqx0";
-          };
-      in map (path: gitSrc + path) [
-        "/src/main/clojure"
-      ];
+    src = pkgs.fetchgit {
+      name = "data.csv";
+      url = "https://github.com/clojure/data.csv.git";
+      rev = "e5beccad0bafdb8e78f19cba481d4ecef5fabf36";
+      sha256 = "021yhc19biycrdcyfak2hyy6jncrw3fhkqzd1jr77rid3f54nqx0";
+    };
+    paths = map (path: src + path) [
+      "/src/main/clojure"
+    ];
   })
 
-  {
+  rec {
     name = "joda-time/joda-time";
-    paths = [(fetchmaven {
+    src = fetchmaven {
       inherit repos;
       artifactId = "joda-time";
       groupId = "joda-time";
       sha512 = "e1763df430f9b2556c591ab894668231a2d74ce946f4c6d460630272b55b02166c40715fdd7eab983cd4247fee19d48a23141d82aa17fc9c7ef6053f3b7bea80";
       version = "2.9.7";
       
-    })];
+    };
+    paths = [ src ];
   }
 
-  {
+  rec {
     name = "clojure/org.clojure";
-    paths = [(fetchmaven {
+    src = fetchmaven {
       inherit repos;
       artifactId = "clojure";
       groupId = "org.clojure";
-      sha512 = "f28178179483531862afae13e246386f8fda081afa523d3c4ea3a083ab607d23575d38ecb9ec0ee7f4d65cbe39a119f680e6de4669bc9cf593aa92be0c61562b";
-      version = "1.10.1";
+      sha512 = "4bb567b9262d998f554f44e677a8628b96e919bc8bcfb28ab2e80d9810f8adf8f13a8898142425d92f3515e58c57b16782cff12ba1b5ffb38b7d0ccd13d99bbc";
+      version = "1.10.3";
       
-    })];
+    };
+    paths = [ src ];
   }
 
-  {
+  rec {
     name = "spec.alpha/org.clojure";
-    paths = [(fetchmaven {
+    src = fetchmaven {
       inherit repos;
       artifactId = "spec.alpha";
       groupId = "org.clojure";
-      sha512 = "18c97fb2b74c0bc2ff4f6dc722a3edec539f882ee85d0addf22bbf7e6fe02605d63f40c2b8a2905868ccd6f96cfc36a65f5fb70ddac31c6ec93da228a456edbd";
-      version = "0.2.176";
+      sha512 = "0740dc3a755530f52e32d27139a9ebfd7cbdb8d4351c820de8d510fe2d52a98acd6e4dfc004566ede3d426e52ec98accdca1156965218f269e60dd1cd4242a73";
+      version = "0.2.194";
       
-    })];
+    };
+    paths = [ src ];
   }
 
-  {
+  rec {
     name = "core.specs.alpha/org.clojure";
-    paths = [(fetchmaven {
+    src = fetchmaven {
       inherit repos;
       artifactId = "core.specs.alpha";
       groupId = "org.clojure";
-      sha512 = "348c0ea0911bc0dcb08655e61b97ba040649b4b46c32a62aa84d0c29c245a8af5c16d44a4fa5455d6ab076f4bb5bbbe1ad3064a7befe583f13aeb9e32a169bf4";
-      version = "0.2.44";
+      sha512 = "c1d2a740963896d97cd6b9a8c3dcdcc84459ea66b44170c05b8923e5fbb731b4b292b217ed3447bbc9e744c9a496552f77a6c38aea232e5e69f8faa627dea4b5";
+      version = "0.2.56";
       
-    })];
+    };
+    paths = [ src ];
   }
 
   ];
