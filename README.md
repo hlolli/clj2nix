@@ -81,13 +81,12 @@ let cljdeps = import ./deps.nix { inherit (pkgs) fetchMavenArtifact fetchgit lib
     classp  = cljsdeps.makePaths {};
 
 #! bash
-# echo ${builtins.toString classp}
-
+# echo ${builtins.concatStringsSep " " classp}
 # prints (square brackets added for demonstrations):
 [
-  /nix/store/9zp8rpnhpmx9i1g7vnicq6hiz11yknqi-clj-time_clj-time-0.14.2.jar
-  /nix/store/n7fmadn560r77qw34814a97j408n0vd6-data.csv
-  /nix/store/sch7dhx6f6mhfx33nvl964qfdr8ivn2x-joda-time_joda-time-2.9.7.jar
+  "/nix/store/9zp8rpnhpmx9i1g7vnicq6hiz11yknqi-clj-time_clj-time-0.14.2.jar"
+  "/nix/store/n7fmadn560r77qw34814a97j408n0vd6-data.csv"
+  "/nix/store/sch7dhx6f6mhfx33nvl964qfdr8ivn2x-joda-time_joda-time-2.9.7.jar"
 ]
 ```
 

@@ -16,8 +16,7 @@ jobs:
           signingKey: "${{ secrets.CACHIX_SIGNING_KEY }}"
       - run: |
           # Build the binary
-          nix-build -E \
-            '(with import <nixpkgs> {}; callPackage ./default.nix { inherit stdenv; })'
+          nix -L build
           # Generate a nix file
           ./result/bin/clj2nix ./test/deps.test.edn ./test/deps.test.nix
           # Make a sanity check
