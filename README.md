@@ -1,5 +1,11 @@
 # clj2nix
 
+## try without installing
+
+```
+$ nix run github:hlolli/clj2nix -- deps.edn deps.nix
+```
+
 ## installation
 
 (Change rev and sha256 according to `nix-prefetch-github hlolli clj2nix`)
