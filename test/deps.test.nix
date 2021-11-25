@@ -7,10 +7,6 @@ let repos = [
         "https://repo.clojars.org/" ];
 
   in rec {
-      fetchmaven = pkgs.callPackage (pkgs.fetchurl {
-        url = "https://raw.githubusercontent.com/NixOS/nixpkgs/681d93ece85b69b38a796464425e69b757f5a18f/pkgs/build-support/fetchmavenartifact/default.nix";
-        sha512 = "sha512-O2HDUL3iT8suMn8g96o8RUOAMzmGPjMSgji7huQqHXXveOttx1VUBO/FbGvp4AI8a4djiUbHuzFuAttLOjZKUQ==";
-      }) {};
       makePaths = {extraClasspaths ? null}:
         (pkgs.lib.concatMap
           (dep:
@@ -33,7 +29,7 @@ let repos = [
       packages = [
   rec {
     name = "clj-time/clj-time";
-    src = fetchmaven {
+    src = pkgs.fetchMavenArtifact {
       inherit repos;
       artifactId = "clj-time";
       groupId = "clj-time";
@@ -59,7 +55,7 @@ let repos = [
 
   rec {
     name = "joda-time/joda-time";
-    src = fetchmaven {
+    src = pkgs.fetchMavenArtifact {
       inherit repos;
       artifactId = "joda-time";
       groupId = "joda-time";
@@ -72,7 +68,7 @@ let repos = [
 
   rec {
     name = "clojure/org.clojure";
-    src = fetchmaven {
+    src = pkgs.fetchMavenArtifact {
       inherit repos;
       artifactId = "clojure";
       groupId = "org.clojure";
@@ -85,7 +81,7 @@ let repos = [
 
   rec {
     name = "spec.alpha/org.clojure";
-    src = fetchmaven {
+    src = pkgs.fetchMavenArtifact {
       inherit repos;
       artifactId = "spec.alpha";
       groupId = "org.clojure";
@@ -98,7 +94,7 @@ let repos = [
 
   rec {
     name = "core.specs.alpha/org.clojure";
-    src = fetchmaven {
+    src = pkgs.fetchMavenArtifact {
       inherit repos;
       artifactId = "core.specs.alpha";
       groupId = "org.clojure";

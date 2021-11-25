@@ -26,10 +26,6 @@
 let repos = [" (repos-nix mvn-repos) " ];
 
   in rec {
-      fetchmaven = pkgs.callPackage (pkgs.fetchurl {
-        url = \"https://raw.githubusercontent.com/NixOS/nixpkgs/681d93ece85b69b38a796464425e69b757f5a18f/pkgs/build-support/fetchmavenartifact/default.nix\";
-        sha512 = \"sha512-O2HDUL3iT8suMn8g96o8RUOAMzmGPjMSgji7huQqHXXveOttx1VUBO/FbGvp4AI8a4djiUbHuzFuAttLOjZKUQ==\";
-      }) {};
       makePaths = {extraClasspaths ? null}:
         (pkgs.lib.concatMap
           (dep:
@@ -66,7 +62,7 @@ let repos = [" (repos-nix mvn-repos) " ];
    (format "
   rec {
     name = \"%s\";
-    src = fetchmaven {
+    src = pkgs.fetchMavenArtifact {
       inherit repos;
       artifactId = \"%s\";
       groupId = \"%s\";
