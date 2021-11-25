@@ -24,12 +24,16 @@ Example:
 $ clj2nix ./deps.edn ./deps.nix [options]
 ```
 
-With an imported `deps.nix` you can use it to fetch the dependencies trough nix. The set has two helper functions that can do this for you; `makeClasspaths {}` and `makePaths {}`.
+With an imported `deps.nix` you can use it to fetch the dependencies trough nix.
+The generated file currently requires that `fetchMavenArtifact, fetchgit, lib` are
+explicitly passed (see example below).
+The imported attribute-set has two helper functions that can do classpath handling for you.
+These are: `makeClasspaths {}` and `makePaths {}`.
 
 ```
 { stdenv, pkgs, clojure }:
 
-let cljdeps = import ./deps.nix { inherit pkgs; };
+let cljdeps = import ./deps.nix { inherit (pkgs) fetchMavenArtifact fetchgit lib; };
     classp  = cljsdeps.makeClasspaths {};
 
 in stdenv.mkDerivation {
@@ -45,7 +49,7 @@ in stdenv.mkDerivation {
 
 ```
 # example
-let cljdeps = import ./deps.nix { inherit pkgs; };
+let cljdeps = import ./deps.nix { inherit (pkgs) fetchMavenArtifact fetchgit lib; };
     classp  = cljsdeps.makeClasspaths {};
 
 ....
@@ -59,7 +63,7 @@ with the optional parameter extraClasspaths
 
 ```
 # example
-let cljdeps = import ./deps.nix { inherit pkgs; };
+let cljdeps = import ./deps.nix { inherit (pkgs) fetchMavenArtifact fetchgit lib; };
     classp  = cljsdeps.makeClasspaths {extraClasspaths="./local/file.jar"};
 
 ....
@@ -73,13 +77,13 @@ prints:
 
 ```nix
 # example
-let cljdeps = import ./deps.nix { inherit pkgs; };
+let cljdeps = import ./deps.nix { inherit (pkgs) fetchMavenArtifact fetchgit lib; };
     classp  = cljsdeps.makePaths {};
 
-....
-echo ${builtins.toString classp}
+#! bash
+# echo ${builtins.toString classp}
 
-prints (square brackets added for demonstrations):
+# prints (square brackets added for demonstrations):
 [
   /nix/store/9zp8rpnhpmx9i1g7vnicq6hiz11yknqi-clj-time_clj-time-0.14.2.jar
   /nix/store/n7fmadn560r77qw34814a97j408n0vd6-data.csv

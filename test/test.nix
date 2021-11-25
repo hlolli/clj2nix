@@ -1,6 +1,6 @@
 { stdenv, pkgs, clojure }:
 
-let cljdeps = import ./deps.test.nix { inherit pkgs; };
+let cljdeps = import ./deps.test.nix { inherit (pkgs) fetchMavenArtifact fetchgit lib; };
     classp = cljdeps.makePaths {};
 
 

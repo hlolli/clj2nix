@@ -21,29 +21,31 @@
        (str "\n")))
 
 (defn- prefix [{:keys [mvn-repos]}]
-  (str "{ pkgs }:
+  (str "{ fetchMavenArtifact, fetchgit, lib }:
 
 let repos = [" (repos-nix mvn-repos) " ];
 
   in rec {
-      makePaths = {extraClasspaths ? null}:
-        (pkgs.lib.concatMap
-          (dep:
-            builtins.map
-            (path:
-              if builtins.isString path then
-                path
-              else if builtins.hasAttr \"jar\" path then
-                path.jar
-              else if builtins.hasAttr \"outPath\" path then
-                path.outPath
-              else
-                path
-                )
-            dep.paths)
-          packages)
-        ++ (if extraClasspaths != null then [ extraClasspaths ] else []);
-      makeClasspaths = {extraClasspaths ? null}: builtins.concatStringsSep \":\" (makePaths {inherit extraClasspaths;});
+      makePaths = {extraClasspaths ? []}:
+        if (builtins.typeOf extraClasspaths != \"list\")
+        then builtins.throw \"extraClasspaths must be of type 'list'!\"
+        else (lib.concatMap (dep:
+          builtins.map (path:
+            if builtins.isString path then
+              path
+            else if builtins.hasAttr \"jar\" path then
+              path.jar
+            else if builtins.hasAttr \"outPath\" path then
+              path.outPath
+            else
+              path
+            )
+          dep.paths)
+        packages) ++ extraClasspaths;
+      makeClasspaths = {extraClasspaths ? []}:
+       if (builtins.typeOf extraClasspaths != \"list\")
+       then builtins.throw \"extraClasspaths must be of type 'list'!\"
+       else builtins.concatStringsSep \":\" (makePaths {inherit extraClasspaths;});
       packageSources = builtins.map (dep: dep.src) packages;
       packages = ["))
 
@@ -62,7 +64,7 @@ let repos = [" (repos-nix mvn-repos) " ];
    (format "
   rec {
     name = \"%s\";
-    src = pkgs.fetchMavenArtifact {
+    src = fetchMavenArtifact {
       inherit repos;
       artifactId = \"%s\";
       groupId = \"%s\";
@@ -81,7 +83,7 @@ let repos = [" (repos-nix mvn-repos) " ];
   (format "
   (rec {
     name = \"%s\";
-    src = pkgs.fetchgit {
+    src = fetchgit {
       name = \"%s\";
       url = \"%s\";
       rev = \"%s\";

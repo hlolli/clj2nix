@@ -5,7 +5,7 @@
 
 let cljdeps = import ./deps.nix { inherit pkgs; };
     classp  = cljdeps.makeClasspaths {};
-    version = "1.0.8";
+    version = "1.1.0-rc";
 
 in stdenv.mkDerivation rec {
 
