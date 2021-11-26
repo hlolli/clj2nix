@@ -1,4 +1,4 @@
-(ns clj2nix
+(ns clj2nix.core
   (:gen-class)
   (:require [clojure.tools.deps.alpha :as deps]
             [clojure.tools.deps.alpha.util.maven :as mvn]
@@ -142,13 +142,13 @@ let repos = [" (repos-nix mvn-repos) " ];
                                                " argument extraClasspaths in "
                                                " makeClasspaths if needed.")
                                       acc)
-                       git-dep?   (conj
+                       git-dep?  (conj
                                    acc
                                    (git-item name
                                              artifactID
                                              (:git/url dep)
-                                             (:sha dep)
-                                             (resolve-git-sha256 (:git/url dep) (:sha dep))
+                                             (or (:sha dep) (:git/sha dep))
+                                             (resolve-git-sha256 (:git/url dep) (or (:sha dep) (:git/sha dep)))
                                              (git-source-paths dep)))
                        :else      (conj
                                    acc
@@ -190,7 +190,7 @@ let repos = [" (repos-nix mvn-repos) " ];
 
 (defn -main [clj2nix-version deps-edn-path output-path & opts]
   (let [{:keys [options summary errors] :as parsed-args}
-        (parse-opts opts cli-options)
+        (parse-opts (into [] (or opts [])) cli-options)
         deps-edn-data (edn/read-string (slurp deps-edn-path))
         mvn-repos (get deps-edn-data :mvn/repos mvn/standard-repos)
         aliases (->> (:alias options)

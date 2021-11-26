@@ -70,7 +70,7 @@ with the optional parameter extraClasspaths
 ```
 # example
 let cljdeps = import ./deps.nix { inherit (pkgs) fetchMavenArtifact fetchgit lib; };
-    classp  = cljsdeps.makeClasspaths {extraClasspaths="./local/file.jar"};
+    classp  = cljsdeps.makeClasspaths { extraClasspaths = ["./local/file.jar"]; };
 
 ....
 echo ${classp}

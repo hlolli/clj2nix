@@ -24,4 +24,5 @@ in stdenv.mkDerivation rec {
 }
 
 # clojure -i clj2nix.clj -m clj2nix test/deps.test.edn test/deps.test.nix
+# clojure -M:run "1.1.0-rc" deps.edn deps.nix -A:build
 # nix-build -E 'with import <nixpkgs> {}; callPackage ./test.nix {}'

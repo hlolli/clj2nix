@@ -1,9 +1,15 @@
-{:deps
- {org.clojure/clojure          {:mvn/version "1.10.3"}
-  org.clojure/data.json        {:mvn/version "2.2.3"}
-  org.clojure/tools.cli        {:mvn/version "1.0.206"}
-  org.clojure/tools.deps.alpha {:mvn/version "0.11.910"
-                                :exclusions  [com.google.inject/guice]}
-  com.google.inject/guice      {:mvn/version "4.2.3"}
-  org.slf4j/slf4j-simple       {:mvn/version "1.7.30"}
-  }}
+{:paths ["src"]
+ :deps
+ {org.clojure/clojure           {:mvn/version "1.10.3"}
+  org.clojure/data.json         {:mvn/version "2.4.0"}
+  io.github.clojure/tools.build {:git/tag "v0.6.7" :git/sha "8cca4f4"}
+  org.clojure/tools.cli         {:mvn/version "1.0.206"}
+  ;; https://lambdaisland.com/blog/2020-06-12-logging-in-clojure-making-sense-of-the-mess
+  org.clojure/tools.deps.alpha  {:mvn/version "0.12.1076"
+                                 :exclusions  [com.google.inject/guice
+                                               org.slf4j/slf4j-nop]}
+  com.google.inject/guice       {:mvn/version "5.0.1"}
+  }
+ :aliases
+ {:run {:main-opts ["-m" "clj2nix.core"]}}
+ }
