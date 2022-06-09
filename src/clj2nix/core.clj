@@ -60,7 +60,7 @@ let repos = [" (repos-nix mvn-repos) " ];
         classifier-str
         (if-not classifier
           ""
-          (format "classifier = \"%s\";" classifier))]
+          (format "      classifier = \"%s\";" classifier))]
    (format "
   rec {
     name = \"%s\";
@@ -70,7 +70,7 @@ let repos = [" (repos-nix mvn-repos) " ];
       groupId = \"%s\";
       sha512 = \"%s\";
       version = \"%s\";
-      %s
+%s
     };
     paths = [ src ];
   }
