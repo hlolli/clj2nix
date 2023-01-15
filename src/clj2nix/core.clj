@@ -49,7 +49,7 @@ let repos = [" (repos-nix mvn-repos) " ];
       packageSources = builtins.map (dep: dep.src) packages;
       packages = ["))
 
-(def ^:priave suffix
+(def ^:private suffix
   "
   ];
   }
