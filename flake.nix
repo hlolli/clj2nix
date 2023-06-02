@@ -8,12 +8,17 @@
       url = "github:edolstra/flake-compat";
       flake = false;
     };
+    gitignore = {
+      url = "github:hercules-ci/gitignore.nix";
+      # To avoid pulling in 2 different nixpkgs
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, utils, ... }: utils.lib.eachDefaultSystem (system:
+  outputs = { self, nixpkgs, utils, gitignore, ... }: utils.lib.eachDefaultSystem (system:
     let
       pkgs = import nixpkgs { inherit system; };
-      clj2nix = pkgs.callPackage ./clj2nix.nix { };
+      clj2nix = pkgs.callPackage ./clj2nix.nix { inherit gitignore; };
     in {
       packages = utils.lib.flattenTree {
         inherit clj2nix;

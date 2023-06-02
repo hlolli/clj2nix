@@ -2,7 +2,7 @@
   stdenv, lib, coreutils, clojure,
   makeWrapper, nix-prefetch-git,
   fetchMavenArtifact, fetchgit,
-  openjdk, fetchFromGitHub, git
+  openjdk, fetchFromGitHub, git, gitignore
 }:
 
 let cljdeps = import ./deps.nix { inherit fetchMavenArtifact fetchgit lib; };
@@ -10,14 +10,7 @@ let cljdeps = import ./deps.nix { inherit fetchMavenArtifact fetchgit lib; };
       extraClasspaths = [ "${placeholder "out"}/lib" ];
     };
     version = "1.1.0-rc";
-    gitignoreSrc = fetchFromGitHub {
-      owner = "hercules-ci";
-      repo = "gitignore.nix";
-      rev = "a20de23b925fd8264fd7fad6454652e142fd7f73";
-      sha256 = "sha256-8DFJjXG8zqoONA1vXtgeKXy68KdJL5UaXR8NtVMUbx8=";
-    };
-
-    inherit (import gitignoreSrc { inherit lib; }) gitignoreSource;
+    inherit (import gitignore { inherit lib; }) gitignoreSource;
 
 in stdenv.mkDerivation rec {
 
