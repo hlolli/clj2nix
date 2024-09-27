@@ -2,7 +2,7 @@
 
 ## try without installing
 
-```
+```bash
 $ nix run github:hlolli/clj2nix -- deps.edn deps.nix
 ```
 
@@ -26,24 +26,24 @@ After the installation you should have `clj2nix` on your path, which takes two a
 
 Example:
 
-```
+```bash
 $ clj2nix ./deps.edn ./deps.nix [options]
 ```
 
-With an imported `deps.nix` you can use it to fetch the dependencies trough nix.
+With an imported `deps.nix` you can use it to fetch the dependencies through nix.
 The generated file currently requires that `fetchMavenArtifact, fetchgit, lib` are
 explicitly passed (see example below).
 The imported attribute-set has two helper functions that can do classpath handling for you.
 These are: `makeClasspaths {}` and `makePaths {}`.
 
-```
+```nix
 { stdenv, pkgs, clojure }:
 
 let cljdeps = import ./deps.nix { inherit (pkgs) fetchMavenArtifact fetchgit lib; };
     classp  = cljsdeps.makeClasspaths {};
 
 in stdenv.mkDerivation {
-  ...whatever here...
+  # ...whatever here...
 
   installPhase = ''
       clojure -i somefile.clj -Scp ${classp}
@@ -53,12 +53,12 @@ in stdenv.mkDerivation {
 
 ### makeClasspaths (colon seperated classpaths)
 
-```
+```nix
 # example
 let cljdeps = import ./deps.nix { inherit (pkgs) fetchMavenArtifact fetchgit lib; };
     classp  = cljsdeps.makeClasspaths {};
 
-....
+# ....
 echo ${classp}
 
 prints:
@@ -67,12 +67,12 @@ prints:
 
 with the optional parameter extraClasspaths
 
-```
+```nix
 # example
 let cljdeps = import ./deps.nix { inherit (pkgs) fetchMavenArtifact fetchgit lib; };
     classp  = cljsdeps.makeClasspaths { extraClasspaths = ["./local/file.jar"]; };
 
-....
+# ....
 echo ${classp}
 
 prints:
@@ -100,6 +100,6 @@ let cljdeps = import ./deps.nix { inherit (pkgs) fetchMavenArtifact fetchgit lib
 
 It's possible to add the extra dependencies form aliases into the nix file by adding one or more -Aalias to the end of the command. Example
 
-```
+```bash
 clj2nix ./deps.edn ./deps.nix -A:test -A:ci
 ```
