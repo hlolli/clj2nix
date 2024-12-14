@@ -46,7 +46,7 @@ in stdenv.mkDerivation {
   # ...whatever here...
 
   installPhase = ''
-      clojure -i somefile.clj -Scp ${classp}
+      clojure -i somefile.clj -Scp "${classp}"
   '';
 }
 ```
